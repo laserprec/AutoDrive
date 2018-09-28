@@ -1,5 +1,7 @@
 # AutoDrive: Building a self-driving toy car
 
+![hardware](./img/hardware.jpg)
+
 ## Materials:
 1. Toy Car (Tamiya TT02)
 1. Raspberry Pi 3b
