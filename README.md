@@ -59,6 +59,9 @@ To control the car's forward motion, we will first implement a simple decision m
     * *Servo Pulse Width Range:* 1150 - 1850 (1500 is Neutral)
 
 ## Circuit Schematics
+
+![schematic](./img/wiring.png)
+
 ### Raspberry Pi GPIO Pin
 
 ![gpio](./img/pi_gpio.png)
