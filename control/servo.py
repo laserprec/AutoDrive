@@ -47,7 +47,9 @@ class Servo:
             # Convert to unit degree
             steer_angle = steer_angle * 180 / PI
         # If left turn
-        if steer_angle < 0:
+        if steer_angle == 0:
+            pulse_width = NEUTRAL_PULSE
+        elif steer_angle < 0:
             # Calculate the desire PWM to induce the steering angle
             pulse_width = NEG_ANGLE_TO_PWM(steer_angle)
             # Restraint the pulse width within the safety range [1200, 1800]
