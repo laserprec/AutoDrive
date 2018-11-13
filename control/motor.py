@@ -11,7 +11,7 @@ class Motor:
         self.raspberrypi = pigpio.pi()
         self.pin = pin
         self.pulseWidth = pulseWidth
-        self.calibrate()
+        # self.calibrate() # Uncomment it when motor doesn't respond
     
     def calibrate(self):
         """ Calibrate the motor before motion"""
@@ -27,7 +27,6 @@ class Motor:
     def stop(self):
         """ Stop the car """
         self.raspberrypi.set_servo_pulsewidth(self.pin, 0)
-
 
 
 # class Motor:
