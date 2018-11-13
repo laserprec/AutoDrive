@@ -17,6 +17,13 @@ We hope that this prototype can serve as a tool to investigate
 1. Efficient software stack in a computation-constrained environment like a raspberry pi
 2. How ethical principle can be implemented in the software stack of an intelligent agent
 
+## Table of Content:
+1. [Project Objectives](#software-architecture)
+1. [Materials](#materials)
+1. [Hardware Specs](#hardware-specs)
+1. [Circuit Schematics](#circuit-schematics)
+1. [Problems Encountered and Solutions](#problems-encountered-and-solutions)
+
 ## Software Architecture
 
 ![self-driving car component](./img/architecture.png)
@@ -47,7 +54,7 @@ To control the car's forward motion, we will first implement a simple decision m
 1. Breadboard
 1. Wires
 
-## Hardwire Specs:
+## Hardware Specs:
 
 1. **540j Motor (Comes with Tamiya TT02)**
     * *Motor Output Voltage*: 6.03V
@@ -69,9 +76,9 @@ To control the car's forward motion, we will first implement a simple decision m
 - MOTOR_PIN = 13
 - SERVO_PIN = 19
 
-## Ongoing List of Problems Encountered and (Working) Solutions:
+## Problems Encountered and Solutions:
 
-### Inital Setup
+### Initial Setup
 1. Troublesome Remote Access (SSH) to Raspberry Pi due to dynamic IP  
 
     Solution 1:
@@ -93,22 +100,52 @@ To control the car's forward motion, we will first implement a simple decision m
         static routers=192.168.2.1
         static domain_name_servers=192.168.2.1
 
-2. Stream video from Raspberry Cam
+1. Stream video from Raspberry Cam
 
     Host webserver or open socket from VLC (See [reference #3-4](#Resources-and-References))
 
-3. Controlling RC Car with Raspberry Pi
+
+1. Controlling RC car with Raspberry Pi
 
     Connect Raspberry Pi's GPIO with the motor and servo of the RC car according to the hardware schematics
 
-4. Develop Software-Hardware Interface
+
+### Control Motor Motion via GPIO
+
+1. Develop basic software-hardware interface
 
     Build principle software foundation by mapping the tolerable pulse-width range of the hardware to measurable actions on the hardware. For example, turning the servo 15 degree left or run the motor on 50% power (See [`./control`](./control/)).
 
+1. Mapping the relationship between PWM signal and the induced steering angle
+
+    The [GPIO library](http://abyz.me.uk/rpi/pigpio/python.html#set_servo_pulsewidth) provides the `set_servo_pulsewidth` method to control the width of a pulse signal within the range of `[500-2500]`. We conducted an experiment to measure the steering angle of the servo induced from this pulse width range (See [./resources/servo_experiment](/resources/servo_experiment)):
+
+    ![PWM to Steering Angle](./resources/servo_experiment/PMD_to_steering_angle.png)
+
+    ![average steering angle (right)](./resources/servo_experiment/avg_steering_angle_bw_wheels-right.png)
+
+    ![average steering angle (left)](./resources/servo_experiment/avg_steering_angle_bw_wheels-left.png)
+
+
+    There is linear relationship between pulse width and the induced steering angle.
+
+    - Left Turn (width: 1200 - 1450): `17.9x + 1439`
+    - Right Turn (width: 1550 - 1800): `15.9x + 1561`
+
+
 ## Resources and References:
+
+### Initial Setup
+
 1. [Setup mDNS for assigning .local domain to Raspberry Pi](https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/)
 1. [Setup static IP through DHCP](https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address/74428#74428)
 1. [Setup video streaming in various methods](https://raspberrypi.stackexchange.com/questions/27082/how-to-stream-raspivid-to-linux-and-osx-using-gstreamer-vlc-or-netcat)
 1. [Compile FFmpeg in Raspberry Pi to stream video over web server](https://johnvoysey.wordpress.com/2014/05/07/raspberry-pi-camera-live-streaming/)
+
+### Pulse Width Modulation and GPIO
+
 1. [Raspberry Pi Controlled ESC and Motor](https://www.youtube.com/watch?v=br_Xv9X7YZc)
+1. [PWM and Motor Motion](https://www.electronics-tutorials.ws/blog/pulse-width-modulation.html)
 1. [PWM Frequency for Controlling Servo Rotation Angle](https://electronics.stackexchange.com/questions/129961/how-to-get-the-pwm-frequency-and-duration-of-each-pulse)
+1. [GPIO Electrical Specifications](http://www.mosaic-industries.com/embedded-systems/microcontroller-projects/raspberry-pi/gpio-pin-electrical-specifications)
+1. [PIGPIO Library API](http://abyz.me.uk/rpi/pigpio/python.html#set_servo_pulsewidth)

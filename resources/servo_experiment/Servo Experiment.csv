@@ -1,0 +1,56 @@
+Objective: figure out the mapping function between steering angle and ,,,,,,,,,
+the pulse width signal range that is needed to turn the servo to the desire angle.,,,,,,,,,
+,,,,,,,,,
+Observation:,Physical Steering Range: [-18.5 - 18.5],,,,,,,,
+,Safe Pulse Width Range (With buffer zone for maneuver): [1200-1800],,,,,,,,
+,Max Pulse Width Range (Potential Damage to Servo): [1150 - 1850],,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,Steering Angle (degree) ,,,,,,,,
+Pulse Width (Range 500-2500),Trial 1,,Trial 2,,Trial 2,,Avg b/w Trials,,Avg b/w Wheels
+,Left Wheel,Right Wheel,Left Wheel,Right Wheel,Left Wheel,Right Wheel,Left Wheel,Right Wheel,
+1450,0,0,0,0,0,0,0,0,0
+1400,-2.4,-2.5,-2.4,-2.5,-2.4,-2.5,-2.4,-2.5,-2.45
+1350,-5.1,-4,-5.1,-4,-5.1,-4,-5.1,-4,-4.55
+1300,-8,-7,-8,-7,-8,-7,-8,-7,-7.5
+1250,-10,-9,-10,-9,-10,-9,-10,-9,-9.5
+1200,-15,-12,-15,-12,-15,-12,-15,-12,-13.5
+1150,-18.5,-15,-18.5,-15,-18.5,-15,-18.5,-15,-16.75
+1500,0,0,0,0,0,0,0,0,0
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,
+,Steering Angle (degree) ,,,,,,,,
+Pulse Width (Range 500-2500),Trial 1,,Trial 2,,Trial 2,,Avg b/w Trials,,Avg b/w Wheels
+,Left Wheel,Right Wheel,Left Wheel,Right Wheel,Left Wheel,Right Wheel,Left Wheel,Right Wheel,
+1550,0,0,0,0,0,0,0,0,0
+1600,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5
+1650,5.1,5,5.1,5,5.1,5,5.1,5,5.05
+1700,7,8.5,7,8.5,7,8.5,7,8.5,7.75
+1750,13,12.5,13,12.5,13,12.5,13,12.5,12.75
+1800,15,15,15,15,15,15,15,15,15
+1850,18.5,18,18.5,18,18.5,18,18.5,18,18.25
+1500,0,0,0,0,0,0,0,0,0

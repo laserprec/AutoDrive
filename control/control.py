@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
-# from motor import Motor
-# from servo import Servo
+from motor import Motor
+from servo import Servo
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 230, 180
 FONT, FONT_SIZE             = 'Comic Sans MS', 30 
@@ -24,8 +24,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0)
 def setup():
     screen.fill(BLACK)
     pygame.display.update()
-    return 
-    # Motor(MOTOR_PIN), Servo(SERVO_PIN)
+    return Motor(MOTOR_PIN), Servo(SERVO_PIN)
 
 def printPressedKey(key):
     textSurface = text.render("Pressed {}".format(key), True, WHITE)
@@ -59,8 +58,7 @@ def lightKeyUp(rec):
     pygame.display.update()
 
 def main():
-    # motor, servo = 
-    setup()
+    motor, servo = setup()
     forward = False
     backward = False
     turnLeft = False
@@ -69,15 +67,15 @@ def main():
         (leftKeyRec, rightKeyRec, upKeyRec, downKeyRec) = drawKeyBoard(0,0)
         if forward: 
             lightKeyUp(upKeyRec)
-            # motor.moveForward()
+            motor.moveForward()
         if backward: 
             lightKeyUp(downKeyRec)
-        # if turnLeft:
-        #     servo.left()
-        # elif turnRight:
-        #     servo.right()
-        # else:
-        #     servo.neutral()
+        if turnLeft:
+            servo.left()
+        elif turnRight:
+            servo.right()
+        else:
+            servo.neutral()
                 
         for event in pygame.event.get():
             screenRefresh()
@@ -105,7 +103,7 @@ def main():
             elif event.type == pygame.KEYUP:
                 print(event.key, 'released')
                 if event.key == UP_KEY:
-                    # motor.stop()
+                    motor.stop()
                     forward = False
                     screenRefresh()
                     pygame.draw.rect(screen, WHITE, upKeyRec, KEY_REC_BORDER)

@@ -6,23 +6,27 @@ MIN_PULSE_WDITH = 1469
 
 
 class Motor:
+    """ Control the longitudinal (forward) motion of the car"""
     def __init__(self, pin, pulseWidth=1450):
-        self.pi = pigpio.pi()
+        self.raspberrypi = pigpio.pi()
         self.pin = pin
         self.pulseWidth = pulseWidth
-        self.calibrate
+        self.calibrate()
     
     def calibrate(self):
-        self.pi.set_servo_pulsewidth(self.pin, 2000)
+        """ Calibrate the motor before motion"""
+        self.raspberrypi.set_servo_pulsewidth(self.pin, 2000)
         sleep(2)
-        self.pi.set_servo_pulsewidth(self.pin, 1000)
+        self.raspberrypi.set_servo_pulsewidth(self.pin, 1000)
         sleep(2)
 
     def moveForward(self):
-        self.pi.set_servo_pulsewidth(self.pin, self.pulseWidth)
+        """ Move forward """
+        self.raspberrypi.set_servo_pulsewidth(self.pin, self.pulseWidth)
 
     def stop(self):
-        self.pi.set_servo_pulsewidth(self.pin, 0)
+        """ Stop the car """
+        self.raspberrypi.set_servo_pulsewidth(self.pin, 0)
 
 
 
