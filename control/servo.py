@@ -17,18 +17,22 @@ class Servo:
     def __init__(self, pin):
         self.raspberrypi = pigpio.pi()
         self.pin = pin
+        self.steer_angle = 0
 
     def left(self):
         """ Turn servo left"""
         self.raspberrypi.set_servo_pulsewidth(self.pin, MAX_LEFT_PULSE)
+        self.steer_angle = MAX_LEFT_ANGLE
 
     def right(self):
         """ Turn servo right"""
         self.raspberrypi.set_servo_pulsewidth(self.pin, MAX_RIGHT_PULSE)
+        self.steer_angle = MAX_RIGHT_ANGLE
 
     def neutral(self):
         """ Reset servo to neutral position"""
         self.raspberrypi.set_servo_pulsewidth(self.pin, NEUTRAL_PULSE)
+        self.steer_angle = 0
 
     def turn(self, steer_angle, radian=True):
         """ Turn the servo to the desired steering angle (default in unit radian)
@@ -46,34 +50,13 @@ class Servo:
         if steer_angle < 0:
             # Calculate the desire PWM to induce the steering angle
             pulse_width = NEG_ANGLE_TO_PWM(steer_angle)
+            # Restraint the pulse width within the safety range [1200, 1800]
+            pulse_width = max(MAX_LEFT_PULSE, pulse_width)
         else:
             # Calculate the desire PWM to induce the steering angle
             pulse_width = POS_ANGLE_TO_PWM(steer_angle)
+            # Restraint the pulse width within the safety range [1200, 1800]
+            pulse_width = pulse_width = min(MAX_RIGHT_PULSE, pulse_width)
 
         self.raspberrypi.set_servo_pulsewidth(self.pin, pulse_width)
-
-
-
-# class Steering ():
-#     def __init__(self, config):
-#         self.conf = config
-#         self.angle = 0
-#         self.max_angle = 45
-#         self.min_angle = -45
-
-#     def left_cont(self):
-#         if self.is_in_safe_range():
-#             self.angle += -5
-
-#     def right_cont(self):
-#         if self.is_in_safe_range():
-#             self.angle += 5
-
-#     def left(self):
-#         self.angle = -45
-
-#     def right(self):
-#         self.angle = 45
-
-#     def is_in_safe_range(self):
-#         return self.min_angle <= self.angle <= self.max_angle
+        self.steer_angle = steer_angle
