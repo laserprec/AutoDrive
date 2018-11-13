@@ -1,16 +1,15 @@
 from math import pi as PI
 import pigpio
 
-MAX_LEFT_ANGLE = 18.5   # In unit degree
-MAX_RIGHT_ANGLE = -18.5 # In unit degree
+MAX_LEFT_ANGLE = -18   # In unit degree
+MAX_RIGHT_ANGLE = 18 # In unit degree
 MAX_LEFT_PULSE = 1200
-MAX_RIGHT_PULSE = 1800
+MAX_RIGHT_PULSE = 1780
 NEUTRAL_PULSE = 1500
 
 # NOTE: To produce a desired steering angle, the linear relationship
 #       between steering angle (in degree) and pulse width is defined as follow:
-POS_ANGLE_TO_PWM = lambda x: 15.9 * x + 1561 # Right Turns
-NEG_ANGLE_TO_PWM = lambda x: 17.9 * x + 1439 # Left Turns
+ANGLE_TO_PWM = lambda x: 17.9 * x + 1439 # Left Turns
 
 class Servo:
     """ Control the transverse (left and right) motion of the car """
@@ -51,13 +50,13 @@ class Servo:
             pulse_width = NEUTRAL_PULSE
         elif steer_angle < 0:
             # Calculate the desire PWM to induce the steering angle
-            pulse_width = NEG_ANGLE_TO_PWM(steer_angle)
-            # Restraint the pulse width within the safety range [1200, 1800]
+            pulse_width = ANGLE_TO_PWM(steer_angle)
+            # Restraint the pulse width within the safety range [1200, 1780]
             pulse_width = max(MAX_LEFT_PULSE, pulse_width)
         else:
             # Calculate the desire PWM to induce the steering angle
-            pulse_width = POS_ANGLE_TO_PWM(steer_angle)
-            # Restraint the pulse width within the safety range [1200, 1800]
+            pulse_width = ANGLE_TO_PWM(steer_angle)
+            # Restraint the pulse width within the safety range [1200, 1780]
             pulse_width = pulse_width = min(MAX_RIGHT_PULSE, pulse_width)
 
         self.raspberrypi.set_servo_pulsewidth(self.pin, pulse_width)
