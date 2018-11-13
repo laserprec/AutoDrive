@@ -18,7 +18,8 @@ We hope that this prototype can serve as a tool to investigate
 2. How ethical principle can be implemented in the software stack of an intelligent agent
 
 ## Table of Content:
-1. [Project Objectives](#software-architecture)
+1. [Project Objectives](#project-objectives)
+1. [Software Architecture](#software-architecture)
 1. [Materials](#materials)
 1. [Hardware Specs](#hardware-specs)
 1. [Circuit Schematics](#circuit-schematics)
