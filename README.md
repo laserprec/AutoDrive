@@ -105,6 +105,14 @@ To control the car's forward motion, we will first implement a simple decision m
 
     Host webserver or open socket from VLC (See [reference #3-4](#Resources-and-References))
 
+    To turn on video stream on the Pi:
+
+        /opt/vc/bin/raspivid -o - -t 0 -hf -w 640 -h 360 -fps 25|cvlc -vvv stream:///dev/stdin --sout '#standard{access=http,mux=ts,dst=:8090}' :demux=h264
+
+    To open the video stream on VLC player:
+
+        http://<IP-OF-THE-RPI>:8090
+
 
 1. Controlling RC car with Raspberry Pi
 
