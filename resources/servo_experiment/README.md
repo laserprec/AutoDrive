@@ -30,6 +30,8 @@ There is linear relationship between pulse width and the induced steering angle.
 - Left Turn (width: 1200 - 1450): `17.9x + 1439`
 - Right Turn (width: 1550 - 1800): `15.9x + 1561`
 
+Through more test on the hardware, I found it more fitting to use one linear mapping, particularly `17.9x + 1439`, as it produce more balanced steering angle around the range between `[-18, 18]` for steering angle degree and `[1200, 1780]` for pulse width.
+
 ![PWM to Steering Angle](./PMD_to_steering_angle.png)
 
 ![PWM to Steering Angle (Right)](./PMD_to_steering_angle-right.png)

@@ -133,6 +133,8 @@ To control the car's forward motion, we will first implement a simple decision m
     - Left Turn (width: 1200 - 1450): `17.9x + 1439`
     - Right Turn (width: 1550 - 1800): `15.9x + 1561`
 
+    Through more test on the hardware, I found it more fitting to use one linear mapping, particularly `17.9x + 1439`, as it produce more balanced steering angle around the range between `[-18, 18]` for steering angle degree and `[1200, 1780]` for pulse width.
+
 
 ## Resources and References:
 
