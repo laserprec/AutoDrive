@@ -23,6 +23,7 @@ We hope that this prototype can serve as a tool to investigate
 1. [Materials](#materials)
 1. [Hardware Specs](#hardware-specs)
 1. [Circuit Schematics](#circuit-schematics)
+1. [Dependency Installation (On Raspberry Pi 3b)](#dependency-installation)
 1. [Problems Encountered and Solutions](#problems-encountered-and-solutions)
 
 ## Software Architecture
@@ -47,12 +48,14 @@ To control the car's forward motion, we will first implement a simple decision m
 
 
 ## Materials:
-1. Toy Car (Tamiya TT02)
+1. Toy Car [(Tamiya TT02 Chasis)](https://www.tamiyausa.com/shop/110-4wd-shaft-drive-road-tt/rc-nsx/tt-02/)
 1. Raspberry Pi 3b
 1. Raspberry Pi Camera
 1. HC-SR05 Ultrasonic Sensor
 1. Power Bank
 1. Breadboard
+1. Ethernet Cable (For internal SSH connect without)
+1. Ethernet Adaptor (If necessary)
 1. Wires
 
 ## Hardware Specs:
@@ -76,6 +79,57 @@ To control the car's forward motion, we will first implement a simple decision m
 
 - MOTOR_PIN = 13
 - SERVO_PIN = 19
+
+## Software Dependencies
+
+1. Python 3.5
+1. Matplotlib 2.2.2
+1. Numpy 1.15.4
+1. Keras 1.2.1
+1. Tensorflow 1.8
+1. OpenCV 3.4.3 (Here we install the [`opencv-python-headless`](https://pypi.org/project/opencv-python-headless/) package from pywheel. It is an unofficial pre-built OpenCV packages)
+1. pigpio 1.38 (Natively installed on Raspberry Pi OS)
+1. picamera 1.13 (Natively installed on Raspberry Pi OS)
+1. [Udacity Self-Driving Car Simulator](https://github.com/udacity/self-driving-car-sim) (For training the end-to-end neural network)
+
+## Dependency Installation 
+
+Instructions for installing the dependencies on a Raspberry Pi 3b running `Raspbian v9.1` linux with Kernel version `4.9.59` using `armv7l` instructions. 
+
+### Install virtualenv and virtualenvwrapper
+
+1. ``sudo pip3 install virtualenv virtualenvwrapper``
+
+1. Append the following onto the ~/.bashrc
+
+        # virtualenv and virtualenvwrapper
+        export WORKON_HOME=$HOME/.virtualenvs
+        export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python3
+        source /usr/local/bin/virtualenvwrapper.sh
+
+1. Run `` source ~/.bashrc``. 
+    - Below are some of the basic commands for virtualenvwrapper. Refer to the [doc](https://virtualenvwrapper.readthedocs.io/en/latest/) for more details:
+
+        - `mkvirtualenv` : Make a new virtual environment.
+        - `workon` : Activate/switch to a virtual environment. Remember, you can have as many environments as you’d like.
+        - `deactivate` : Jumps out of a virtual environment and you’ll be working with your system.
+        - `rmvirtualenv` : Deletes a virtual environment.
+
+1. Create a new virtual environemnt call `autodrive`
+
+        mkvirtualenv autodrive -p python3
+
+1. Install required shared libraries
+
+        sudo apt-get update
+        sudo apt-get install libatlas-base-dev
+        sudo apt-get install libhdf5-dev
+        sudo apt-get install libhdf5-serial-dev
+
+1. Install all dependencies with pip 
+
+        pip3 install -r requirements.txt
+
 
 ## Problems Encountered and Solutions:
 
@@ -118,6 +172,15 @@ To control the car's forward motion, we will first implement a simple decision m
 
     Connect Raspberry Pi's GPIO with the motor and servo of the RC car according to the hardware schematics
 
+### Installing Depedencies
+
+1. Install OpenCv on Raspberry Pi
+
+    See the [post](https://www.pyimagesearch.com/2018/09/19/pip-install-opencv/)
+
+1. Numpy and h5py are missing shared libraries object files. 
+
+    Install libatlas-base-dev and libhdf5-serial-dev
 
 ### Control Motor Motion via GPIO
 
@@ -152,6 +215,11 @@ To control the car's forward motion, we will first implement a simple decision m
 1. [Setup static IP through DHCP](https://raspberrypi.stackexchange.com/questions/37920/how-do-i-set-up-networking-wifi-static-ip-address/74428#74428)
 1. [Setup video streaming in various methods](https://raspberrypi.stackexchange.com/questions/27082/how-to-stream-raspivid-to-linux-and-osx-using-gstreamer-vlc-or-netcat)
 1. [Compile FFmpeg in Raspberry Pi to stream video over web server](https://johnvoysey.wordpress.com/2014/05/07/raspberry-pi-camera-live-streaming/)
+
+### Installating Dependencies 
+
+1. [Virtualenvwrapper Doc](https://virtualenvwrapper.readthedocs.io/en/latest/)
+1. [Install OpenCV on Raspberry Pi](https://www.pyimagesearch.com/2018/09/19/pip-install-opencv/)
 
 ### Pulse Width Modulation and GPIO
 
