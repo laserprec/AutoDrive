@@ -36,6 +36,7 @@ We hope that this prototype can serve as a tool to investigate
     - [Initial Setup](#initial-setup-ref)
     - [Installing Dependencies](#installing-dependencies-ref)
     - [Control Motor Motion via GPIO](#pulse-width-modulation-and-gpio-ref)
+    - [End to End Neural Network](#end-to-end-neural-network-ref)
 
 ## Software Architecture
 
@@ -103,8 +104,8 @@ To control the car's longitudinal motion, we will first implement a simple decis
 1. Keras 1.2.1
 1. Tensorflow 1.8
 1. OpenCV 3.4.3 (Here we install[`opencv-python-headless`](https://pypi.org/project/opencv-python-headless/) from pywheel. It is an unofficial pre-built OpenCV package)
-1. pigpio 1.38 (Natively installed on Raspberry Pi OS)
-1. picamera 1.13 (Natively installed on Raspberry Pi OS)
+1. pigpio 1.38 (Natively installed on Raspbian Linux)
+1. picamera 1.13 (Natively installed on Raspbian Linux)
 1. [Udacity Self-Driving Car Simulator](https://github.com/udacity/self-driving-car-sim) (For training the end-to-end neural network)
 
 ## Dependency Installation 
@@ -189,7 +190,7 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
         pip3 install -r requirements.txt
 
-1. Toggle on system-wide packages (hack for resolving dependencies for matplotlib in Python 3.5.X environment).
+1. Toggle on system-wide packages (hack for resolving dependencies for `matplotlib` in Python 3.5.X environment). This also brings into the virtual environment both `picamera` and `pigpio` libraries that are natively installed on raspbian linux. 
 
         toggleglobalsitepackages autodrive
 
@@ -205,7 +206,7 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
     Solution 1:
 
-    Create a .local domain name via mDNS and/or configure static IP through configuring DHCP request (See [reference #1-2](#Resources-and-References))  
+    Create a .local domain name via mDNS and/or configure static IP through configuring DHCP request (see [Setup mDNS for assigning .local domain to Raspberry Pi](https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/)(#Resources-and-References)).  
 
     Solution 2:
 
@@ -224,7 +225,7 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
 1. Stream video from Raspberry Cam
 
-    Host webserver or open socket from VLC (See [reference #3-4](#Resources-and-References))
+    Host webserver or open socket from VLC (see [Setup video streaming in various methods]).
 
     To turn on video stream on the Pi:
 
@@ -234,6 +235,7 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
         http://<IP-OF-THE-RPI>:8090
 
+    NOTE: Streaming using VLC player introduces extensively footage latency (2-3 seconds) through a ethernet connection.
 
 1. Controlling RC car with Raspberry Pi
 
@@ -309,3 +311,8 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 1. [PWM Frequency for Controlling Servo Rotation Angle](https://electronics.stackexchange.com/questions/129961/how-to-get-the-pwm-frequency-and-duration-of-each-pulse)
 1. [GPIO Electrical Specifications](http://www.mosaic-industries.com/embedded-systems/microcontroller-projects/raspberry-pi/gpio-pin-electrical-specifications)
 1. [PIGPIO Library API](http://abyz.me.uk/rpi/pigpio/python.html#set_servo_pulsewidth)
+
+### End to End Neural Network Ref
+
+1. [Behavioral Cloning](https://github.com/JohnGee96/CarND-Behavioral-Cloning) - Udacity Self-Driving Car Nanodegree Project
+1. [Nvidia's End to End Paper](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
