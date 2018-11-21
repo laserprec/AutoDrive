@@ -1,6 +1,6 @@
 # AutoDrive: Building a self-driving toy car
 
-![hardware](./img/hardware.jpg)
+![hardware](./img/hardware_v2.jpg)
 
 ## Project Objectives:
 
