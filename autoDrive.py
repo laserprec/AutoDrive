@@ -6,28 +6,27 @@ from picamera import PiCamera
 from keras.models import load_model
 from keras import __version__ as keras_version
 
-from motor import Motor
-from servo import Servo
+from control.motor import Motor
+from control.servo import Servo
+from sensor.camera import Camera
 
 MOTOR_PIN = 13
 SERVO_PIN = 19
 TRAINED_WEIGHTS = ""
+KERAS_VERSION = keras_version
 
 # Initialize global variables
-model, motor, servo = None, None, None
-camera, imgstream = None, None
-
+camera, model, motor, servo = None, None, None, None
 def setup():
     """ Setup global variables"""
-    camera = PiCamera()
-    imgstream = BytesIO()
+    camera = Camera()
     servo = Servo(SERVO_PIN)
     motor = Motor(MOTOR_PIN)
     model = loadTrainedModel(TRAINED_WEIGHTS)
     
-    # Warmup the camera
-    camera.start_preview()
-    sleep(2) # warm-up time
+    # # Warmup the camera
+    # camera.start_preview()
+    # sleep(2) # warm-up time
 
 def loadTrainedModel(filename):
     """ Load in pretrained model
@@ -39,21 +38,21 @@ def loadTrainedModel(filename):
     # check that model Keras version is same as local Keras version
     f = h5py.File(filename, mode='r')
     model_version = f.attrs.get('keras_version')
-    keras_version = str(keras_version).encode('utf8')
+    keras_version = str(KERAS_VERSION).encode('utf8')
 
     if model_version != keras_version:
         print('You are using Keras version ', keras_version,
               ', but the model was built using ', model_version)
     return load_model(filename)
 
-def captureImg():
-    """ Capture a image from the camera
-    Returns:
-        [PIL Image object] -- represents the captured image
-    """
-    camera.capture(imgstream, format='jpeg')
-    imgstream.seek(0)
-    return Image.open(imgstream)
+# def captureImg():
+#     """ Capture a image from the camera
+#     Returns:
+#         [PIL Image object] -- represents the captured image
+#     """
+#     camera.capture(imgstream, format='jpeg')
+#     imgstream.seek(0)
+#     return Image.open(imgstream)
 
 def run():
     setup()
