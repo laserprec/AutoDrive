@@ -52,6 +52,7 @@ To control the car's forward motion, we will first implement a simple decision m
 1. Raspberry Pi 3b
 1. Raspberry Pi Camera
 1. HC-SR05 Ultrasonic Sensor
+1. SD Card (16 GB minimum)
 1. Power Bank
 1. Breadboard
 1. Ethernet Cable (For internal SSH connect without)
