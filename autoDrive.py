@@ -1,19 +1,13 @@
-import h5py
-from io import BytesIO
-from PIL import Image
-from time import sleep
-from picamera import PiCamera
-from keras.models import load_model
-from keras import __version__ as keras_version
+from time import time
 
 from control.motor import Motor
 from control.servo import Servo
 from sensor.camera import Camera
+from e2e.model import loadTrainedModel, preprocess
 
 MOTOR_PIN = 13
 SERVO_PIN = 19
 TRAINED_WEIGHTS = ""
-KERAS_VERSION = keras_version
 
 # Initialize global variables
 camera, model, motor, servo = None, None, None, None
@@ -23,47 +17,26 @@ def setup():
     servo = Servo(SERVO_PIN)
     motor = Motor(MOTOR_PIN)
     model = loadTrainedModel(TRAINED_WEIGHTS)
-    
-    # # Warmup the camera
-    # camera.start_preview()
-    # sleep(2) # warm-up time
-
-def loadTrainedModel(filename):
-    """ Load in pretrained model
-    Arguments:
-        filename {str} -- filepath of the .h5 file containing the trained weights
-    Returns:
-        [keras.model] -- trained model
-    """
-    # check that model Keras version is same as local Keras version
-    f = h5py.File(filename, mode='r')
-    model_version = f.attrs.get('keras_version')
-    keras_version = str(KERAS_VERSION).encode('utf8')
-
-    if model_version != keras_version:
-        print('You are using Keras version ', keras_version,
-              ', but the model was built using ', model_version)
-    return load_model(filename)
-
-# def captureImg():
-#     """ Capture a image from the camera
-#     Returns:
-#         [PIL Image object] -- represents the captured image
-#     """
-#     camera.capture(imgstream, format='jpeg')
-#     imgstream.seek(0)
-#     return Image.open(imgstream)
 
 def run():
     setup()
     # Keep the car moving forward
     motor.moveForward()
     while True:
-        img = captureImg()
-        # Run the e2e model to get steering commands
-        steering = model.predict(img)
-        servo.turn(steering)
-
+        # Record execution time
+        start_time = time()
+        img = camera.captureImg()
+        img = preprocess(img)
+        # Record end-to-end neural network execution time
+        e2e_start = time()
+        # Run the end-to-end model to get steering commands
+        steering = model.predict(img[None, :, :, :], batch_size=1)
+        print("Time to execute e2e CNN:    {:1.4f} sec".format(time() - e2e_start))
+        # Validate that the steering angle is in acceptable range
+        steering = servo.validate(steering, unit='radian')
+        servo.turn(float(steering))
+        print("Time to execute full cycle: {:1.4f} sec".format(time() - start_time))
+        print("Steering Command:           {:1.4f} radian ".format(steering))
 if __name__ == "__main__":
     run()
     

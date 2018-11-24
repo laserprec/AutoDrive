@@ -1,8 +1,10 @@
-from math import pi as PI
+from math import degrees, radians
 import pigpio
 
 MAX_LEFT_ANGLE = -18   # In unit degree
-MAX_RIGHT_ANGLE = 18 # In unit degree
+MAX_RIGHT_ANGLE = 18   # In unit degree
+MAX_LEFT_RADIAN = radians(MAX_LEFT_ANGLE)   # In unit radian
+MAX_RIGHT_RADIAN = radians(MAX_RIGHT_ANGLE) # In unit radian
 MAX_LEFT_PULSE = 1200
 MAX_RIGHT_PULSE = 1780
 NEUTRAL_PULSE = 1500
@@ -44,10 +46,10 @@ class Servo:
         # If steering angle is in unit radian
         if radian:
             # Convert to unit degree
-            steer_angle = steer_angle * 180 / PI
-        # If left turn
+            steer_angle = degrees(steer_angle)
         if steer_angle == 0:
             pulse_width = NEUTRAL_PULSE
+        # If left turn
         elif steer_angle < 0:
             # Calculate the desire PWM to induce the steering angle
             pulse_width = ANGLE_TO_PWM(steer_angle)
@@ -61,3 +63,29 @@ class Servo:
 
         self.raspberrypi.set_servo_pulsewidth(self.pin, pulse_width)
         self.steer_angle = steer_angle
+
+    def validate(self, steer_angle, unit="radian"):
+        if unit == 'radian':
+            return self._validate_radian(steer_angle)
+        elif unit == 'degree':
+            return self._validate_degree(steer_angle)
+        else:
+            raise ValueError("Error: value units are either in 'radian' or 'degree'")
+
+    def _validate_radian(self, steer_angle):
+        if steer_angle < MAX_LEFT_RADIAN or steer_angle > MAX_RIGHT_RADIAN:
+            print("Out of bound steering command: {}".format(steer_angle))
+            if steer_angle < MAX_LEFT_RADIAN:
+                steer_angle = MAX_LEFT_RADIAN
+            else:
+                steer_angle = MAX_RIGHT_RADIAN
+        return steer_angle
+
+    def _validate_degree(self, steer_angle):
+        if steer_angle < MAX_LEFT_ANGLE or steer_angle > MAX_RIGHT_ANGLE:
+            print("Out of bound steering command: {}".format(steer_angle))
+            if steer_angle < MAX_LEFT_ANGLE:
+                steer_angle = MAX_LEFT_ANGLE
+            else:
+                steer_angle = MAX_RIGHT_ANGLE
+        return steer_angle

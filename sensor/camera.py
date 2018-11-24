@@ -2,6 +2,7 @@ from time import sleep
 from io import BytesIO
 from picamera import PiCamera
 from PIL import Image
+from numpy import asarray
 
 class Camera:
     """ Provide methods to access the visual input from the picamera"""
@@ -21,9 +22,9 @@ class Camera:
             format {str} -- format of the captured image (default: {'jpeg'})
         
         Returns:
-            [PIL Image object] -- represents the captured image
+            [np.array] -- 2D array of the captured image
         """
 
         self.camera.capture(self.imgstream, format=format)
         self.imgstream.seek(0)
-        return Image.open(self.imgstream)
+        return asarray(Image.open(self.imgstream))
