@@ -16,10 +16,12 @@ servo = Servo(SERVO_PIN)
 motor = Motor(MOTOR_PIN)
 model = loadTrainedModel(TRAINED_WEIGHTS)
 
-def run():
+def run(max_iterations=float('inf')):
     # Keep the car moving forward
     motor.moveForward()
-    while True:
+    i = 0
+    while i < max_iterations:
+        i += 1
         # Record execution time
         start_time = time()
         camera.captureImg()
@@ -34,7 +36,8 @@ def run():
         servo.turn(steering)
         print("Time to execute full cycle: {:1.4f} sec".format(time() - start_time))
         print("Steering Command:           {:1.4f} radian ".format(steering))
+    motor.stop()
 
 if __name__ == "__main__":
-    run()
+    run(max_iterations=50)
     
