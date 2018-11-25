@@ -6,7 +6,7 @@ MIN_PULSE_WDITH = 1469
 
 class Motor:
     """ Control the longitudinal (forward) motion of the car"""
-    def __init__(self, pin, initPulseWidth=1450):
+    def __init__(self, pin, initPulseWidth=1457):
         self.raspberrypi = pigpio.pi()
         self.pin = pin
         self.pulseWidth = initPulseWidth
