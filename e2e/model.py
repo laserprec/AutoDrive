@@ -23,14 +23,13 @@ def loadTrainedModel(filename):
     return load_model(filename)
 
 
-def preprocess(img, axis=1, new_size=(200,64), top_row=20, bot_row=10):
+def preprocess(img, new_size=(200,64), top_row=40, bot_row=10):
     """[summary]
     
     Arguments:
         img {np.array} -- 2D array representation of the image
     
     Keyword Arguments:
-        axis {int} -- rotation axis (default: {1})
         new_size {tuple} -- the size to resize into (default: {(200,64)})
         top_row {int} -- the number of top rows to be removed from the image (default: {20})
         bot_row {int} -- the number of bottom rows to be removed from the image (default: {10})
@@ -38,9 +37,6 @@ def preprocess(img, axis=1, new_size=(200,64), top_row=20, bot_row=10):
     Returns:
         [np.array] -- 2D array representation of the preprocessed image
     """
-
-    # Flip the image horizontally
-    img = cv2.flip(img, axis)
     # Crop the top sections
     top = top_row
     bot = img.shape[0] - bot_row
