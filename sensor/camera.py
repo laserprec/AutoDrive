@@ -18,6 +18,7 @@ class Camera:
 
         self.camera = PiCamera()
         self.camera.resolution = resolution
+        self.camera.shutter_speed = 1000
         self.img_buffer = self.createImageBuffer(resolution)
 
         # Warmup the camera
@@ -58,4 +59,4 @@ class Camera:
         Keyword Arguments:
             format {str} -- format of the captured image (default: {'rbg'})
         """
-        self.camera.capture(self.img_buffer, format=format)
+        self.camera.capture(self.img_buffer, format=format, use_video_port=True)

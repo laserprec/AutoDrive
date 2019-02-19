@@ -24,8 +24,13 @@ def run(max_iterations=float('inf')):
         i += 1
         # Record execution time
         start_time = time()
+        # Record time to capture image
         camera.captureImg()
+        print("Time to capture img:        {:1.4f} sec".format(time() - start_time))
+        # Record time to preprocess img
+        preprocess_start = time()
         img = preprocess(camera.img_buffer)
+        print("Time to preprocess img:     {:1.4f} sec".format(time() - preprocess_start))
         # Record end-to-end neural network execution time
         e2e_start = time()
         # Run the end-to-end model to get steering commands
