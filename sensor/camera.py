@@ -18,7 +18,8 @@ class Camera:
 
         self.camera = PiCamera()
         self.camera.resolution = resolution
-        self.camera.shutter_speed = 1000
+        # self.camera.shutter_speed = 1000
+        # self.framerate = 15
         self.img_buffer = self.createImageBuffer(resolution)
 
         # Warmup the camera
