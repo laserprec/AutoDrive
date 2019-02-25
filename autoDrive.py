@@ -1,5 +1,5 @@
 from time import time
-
+from matplotlib import pyplot as plt
 from control.motor import Motor
 from control.servo import Servo
 from sensor.camera import Camera
@@ -31,6 +31,8 @@ def run(max_iterations=float('inf')):
         preprocess_start = time()
         img = preprocess(camera.img_buffer)
         print("Time to preprocess img:     {:1.4f} sec".format(time() - preprocess_start))
+        #plt.imshow(img)
+        #plt.show()
         # Record end-to-end neural network execution time
         e2e_start = time()
         # Run the end-to-end model to get steering commands
@@ -42,7 +44,8 @@ def run(max_iterations=float('inf')):
         print("Time to execute full cycle: {:1.4f} sec".format(time() - start_time))
         print("Steering Command:           {:1.4f} radian ".format(steering))
     motor.stop()
+    servo.neutral()
 
 if __name__ == "__main__":
-    run(max_iterations=50)
+    run(max_iterations=170)
     
