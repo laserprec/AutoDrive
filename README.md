@@ -15,8 +15,16 @@ We hope that this prototype can serve as a tool to investigate
 1. Efficient software stack in a computation-constrained environment like a raspberry pi
 2. How ethical principle can be implemented in the software stack of an intelligent agent
 
+## Result Video
+
+[![Link to Youtube](https://i.ytimg.com/vi/xME5ly80URw/hqdefault.jpg?sqp=-oaymwEZCPYBEIoBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLAWjQPxu_-CtNF7UPsMcYwW8eghiw)](https://youtu.be/xME5ly80URw)
+
+[Final Result](https://youtu.be/xME5ly80URw): https://youtu.be/xME5ly80URw
+
+
 ## Table of Content:
 1. [Project Objectives](#project-objectives)
+1. [Result Video](#result-video)
 1. [Software Architecture](#software-architecture)
     - [System Design](#system-design)
     - [Technical Overview](#technical-overview)
