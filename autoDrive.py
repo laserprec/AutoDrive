@@ -40,4 +40,3 @@ def run(max_iterations=float('inf')):
 
 if __name__ == "__main__":
     run(max_iterations=50)
-    
