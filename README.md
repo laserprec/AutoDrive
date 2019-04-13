@@ -9,8 +9,6 @@ We will be building a small-scale prototype of an autonomous vehicle through the
 1. Assemble a raspberry-pi-controlled racing car mounted with camera and ultrasound sensor
 1. Train a deep learning model to
    1. clone regular driving behavior along a track (this can be made of printing paper laid on two sides)
-   1. detect miniature traffic signs and respond accordingly
-1. Detect and circumvent hindering obstacles on the track using sensor data
 1. Explore efficient perception and planning algorithms operable in IoT devices like raspberry pi and augmentation hardware like the Intel Movidius Compute Stick
 
 We hope that this prototype can serve as a tool to investigate
@@ -20,6 +18,7 @@ We hope that this prototype can serve as a tool to investigate
 ## Table of Content:
 1. [Project Objectives](#project-objectives)
 1. [Software Architecture](#software-architecture)
+    - [System Design](#system-design)
     - [Technical Overview](#technical-overview)
 1. [Materials](#materials)
 1. [Hardware Specs](#hardware-specs)
@@ -28,10 +27,12 @@ We hope that this prototype can serve as a tool to investigate
     - [Connect to Raspberry Pi](#connect-to-raspberry-pi)
     - [Install virtualenv and virtualenvwrapper](#install-virtualenv-and-virtualenvwrapper)
     - [Install Full Dependencies](#install-full-dependencies)
+    - [Starting the Car](#starting-the-car)
 1. [Problems Encountered and Solutions](#problems-encountered-and-solutions)
     - [Initial Setup](#initial-setup)
     - [Installing Dependencies](#installing-dependencies)
     - [Control Motor Motion via GPIO](#control-motor-motion-via-gpio)
+    - [Optimizing Pipeline](#optimizing-pipeline)
 1. [Resources and References](#resources-and-references)
     - [Initial Setup](#initial-setup-ref)
     - [Installing Dependencies](#installing-dependencies-ref)
@@ -50,7 +51,22 @@ An autonomous vehicle has 5 major components as follow:
 4. Control
 5. System Integration
 
-However, it is not practical to implement the full software stack of an autonomous vehicle into our project. For the early stage of the project, the focus will be set on both **Control** and **Computer Vision**. 
+However, it is not practical to implement the full software stack of an autonomous vehicle into our project. The focus of this project will be set on both **Control** and **Computer Vision**.
+
+
+### System Design
+
+![system design](./img/system_design.png)
+
+We will be using two different platforms to build our prototype. We will use a [simulator from Udacity](https://github.com/udacity/self-driving-car-sim) to produce data to train an end-to-end deep neural network model published by [Nvidia](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf) which will be responsible for controlling the steering angle of the vehicle from images of the road. 
+
+![simulation example](./img/example_img.png)
+
+The simulation records a video of the user driving the vehicle and tags each video frame with the respective steering angle of the vehicle. We have collected two full loops of data (about 400MB) and trained the network for 8 hours on a 1.4 GHz Intel Core i5
+CPU. For more information on training this model, see a [separate repository](https://github.com/JohnGee96/CarND-Behavioral-Cloning) 
+
+Once the neural network model is trained, we then deploy the model onto a raspberry pi which is wired to both the motor and servo of a RC car. On board the pi, we will build control APIs responsible for translating the desire control parameters (i.e. steering angles and speed) into pulse width signal that actuates the motors on the prototype.
+
 
 ### Technical Overview
 
@@ -197,7 +213,19 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
     NOTE: `toggleglobalsitepackages` will make the virtual environment include global package. To turn off, simply call `toggleglobalsitepackages autodrive` again.
 
+### Starting the Car 
 
+1. Spin up the virtual environment
+
+        workon autodrive
+
+1. Turn on the Pi GPIO daemon
+
+        sudo pigpiod
+
+1. Start the pipeline
+
+        python3 autoDrive.py
 
 ## Problems Encountered and Solutions:
 
@@ -264,6 +292,9 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
             pip3 install cairocffi
 
+1. Troubleshooting TensorFlow backed Keras - if you get the error "ValueError: Tensor Tensor is not an element of this graph" while making predictions with a pretrained model, run the pretrained model on a dummy data directly after initializing it. See this [post (though in Chinese) for details](https://www.jianshu.com/p/c84ae0527a3f)
+
+
 ### Control Motor Motion via GPIO
 
 1. Develop basic software-hardware interface
@@ -288,6 +319,15 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
     Through more test on the hardware, I found it more fitting to use one linear mapping, particularly `17.9x + 1439`, as it produce more balanced steering angle around the range between `[-18, 18]` for steering angle degree and `[1200, 1780]` for pulse width.
 
+### Optimizing Pipeline
+
+1. Dramatically reduce the time it takes to record an image by using the keyword `use_video_port=True`
+
+    The picamera API can record multiple images without re-initializing the buffer. We can take advantage of this by using the following API methods:
+
+        camera.capture_continuous(stream, 'jpeg', use_video_port=True):
+
+1. We can also use the Movidius Compute Stick to accelerate the inference time of our neural network. See [link](https://www.dlology.com/blog/how-to-run-keras-model-on-movidius-neural-compute-stick/).
 
 ## Resources and References:
 
@@ -316,3 +356,9 @@ Now you can ssh into the pi with static ip: `ssh pi@192.168.2.2`
 
 1. [Behavioral Cloning](https://github.com/JohnGee96/CarND-Behavioral-Cloning) - Udacity Self-Driving Car Nanodegree Project
 1. [Nvidia's End to End Paper](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
+
+### Optimizing the Pipeline
+
+1. [Picamera multi-threading](https://picamera.readthedocs.io/en/release-1.13/recipes2.html)
+1. [Picamera speed up](https://picamera.readthedocs.io/en/release-1.13/recipes2.html)
+1. [Run Keras Model on Movidius Compute Stick](https://www.dlology.com/blog/how-to-run-keras-model-on-movidius-neural-compute-stick/)
